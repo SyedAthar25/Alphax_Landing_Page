@@ -7,7 +7,7 @@
     before:bg-[url('https://preline.co/assets/svg/examples/polygon-bg-element.svg')]
 
     dark:bg-[center_top_-2rem] dark:bg-[length:1300px] lg:dark:bg-[length:100dvw] dark:bg-no-repeat
-    dark:bg-[url('https://preline.co/assets/svg/examples/polygon-bg-element-dark.svg')];
+    dark:bg-[url('https://preline.co/assets/svg/examples-dark/polygon-bg-element.svg')];
 }
 
 .pro-release-wrapper {
