@@ -1,30 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWR from "swr";
 import AxiosFetcher from "./AxiosFetcher";
-import { VITE_BE_DOMAIN, VITE_LAMBDA_URL } from "@constants/index";
+import {  VITE_LAMBDA_URL } from "@constants/index";
+// VITE_BE_DOMAIN,
 
 // ENDPOINTS keys
 export const ENDPOINTS = {
-  // auth
+  // Auth
   login: "/auth/login",
-  signup: "/auth/signup",
+  signup: "http://64.227.141.207/api/method/vertex_erp.api.auth.signup_and_get_token",
+  createSite: "http://64.227.141.207/api/method/vertex_erp.api.utils.create_new_site",
+
+  // Optional
   configSite: "/server/config-site",
   registerTrial: "/user/trial",
   registerPremium: "/user/premium",
 };
-// Instance of AxiosFetcher
-// console.log({ meta_vite: import.meta.env });
-export const fetcher = new AxiosFetcher(VITE_BE_DOMAIN);
+
+// Axios instances
+export const fetcher = new AxiosFetcher(import.meta.env.VITE_BE_DOMAIN);
 export const serverFetcher = new AxiosFetcher(VITE_LAMBDA_URL);
 
-// config for swr
+// SWR config
 const SWRoptions = {
   revalidateOnFocus: false,
   shouldRetryOnError: false,
   loadingTimeout: 3000,
 };
 
-// main hook content
+// Hook
 const useAxiosSWR = <Data, Error = any>(
   url: string,
   options?: Record<string, any>

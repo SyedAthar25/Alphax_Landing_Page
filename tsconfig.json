@@ -10,6 +10,7 @@
     "baseUrl": "./src",
     "rootDir": "src",
     "paths": {
+      "@/*": ["./*"],
       "@components/*": ["./components/*"],
       "@store/*": ["./store/*"],
       "@lib/*": ["./lib/*"],
