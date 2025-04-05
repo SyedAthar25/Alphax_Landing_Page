@@ -1,6 +1,8 @@
 const Divider = () => {
   return (
-    <div className="bg-[radial-gradient(closest-side,#7c3aed85,#2563eb85,transparent)] h-1"></div>
+    <div className="bg-[radial-gradient(closest-side,#774A67,#774A67,transparent)] h-1">
+      {/* bg-gradient-to-r from-[#774A67] to-[#774A67] */}
+    </div>
   );
 };
 

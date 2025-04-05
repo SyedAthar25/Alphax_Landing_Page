@@ -64,10 +64,10 @@ const PaymentModal = () => {
   const Header = ({ isSpecial = false }: { isSpecial?: boolean; }) => {
     return <div className={cn('w-full', isSpecial && 'block lg:hidden')}>
       <div className='flex items-center'>
-        <p className='ml-[4rem] lg:ml-0 text-[14px] font-medium tracking-[2%]'>Vertex ERP 2024</p>
+        <p className='ml-[4rem] lg:ml-0 text-[14px] font-medium tracking-[2%]'>AlphaX Saas 2025</p>
         <div className='flex items-center justify-center ml-[10px] text-[12px] bg-yellow-200 text-amber-700 rounded-[5px] font-bold px-2 py-[0.5px]'>PREMIUM</div>
       </div>
-      <p className='w-full text-center lg:w-max lg:text-start mt-[2rem] font-semibold text-gray-500'>Vertex ERP Full</p>
+      <p className='w-full text-center lg:w-max lg:text-start mt-[2rem] font-semibold text-gray-500'>AlphaX Saas Full</p>
       <p className='w-full text-center lg:w-max lg:text-start text-[40px] font-medium tracking-[2%]'>$1.00</p>
       <p className='w-full text-center lg:w-max lg:text-start font-medium tracking-[0.6px] text-gray-600/90 text-[14px] mb-[1rem] lg:mb-[2rem]'>Unlock full potential of ERP forever</p>
       <div className='mx-auto w-[250px] h-[250px] lg:mx-0 lg:w-[300px] lg:h-[300px] overflow-hidden mb-[1rem] lg:mb-[2rem]'>

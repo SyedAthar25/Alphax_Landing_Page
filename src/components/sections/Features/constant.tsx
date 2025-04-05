@@ -1,7 +1,7 @@
 export const FEATURES = [
   {
     title: "14-Day Risk-Free Trial",
-    desc: "Ready to experience VertextERP's full potential right away, no credit card required.",
+    desc: "Ready to experience AlphaX Saas's full potential right away, no credit card required.",
     icon: (
       <svg
         className="flex-shrink-0 w-6 h-6 text-blue-600 dark:text-blue-500"
@@ -158,7 +158,7 @@ export const FEATURES = [
   },
   {
     title: "Optimized Design",
-    desc: "Seamlessly access and manage VertextERP on any device with our mobile-optimized design.",
+    desc: "Seamlessly access and manage AplhaX Saas on any device with our mobile-optimized design.",
     icon: (
       <svg
         className="flex-shrink-0 w-6 h-6 text-blue-600 dark:text-blue-500"

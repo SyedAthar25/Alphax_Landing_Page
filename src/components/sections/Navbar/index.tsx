@@ -1,8 +1,9 @@
 import { rootStore } from "@store/index";
 import Icons from "../Hero/icons";
+// import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const toggleStarted = rootStore(({ toggleStarted }) => toggleStarted);
+  const toggleSignUp = rootStore(({ toggleSignUp }) => toggleSignUp);
   return (
     <nav
       className="fixed z-[99] filter top-0 left-0 right-0 py-4 md:py-5 
@@ -14,14 +15,14 @@ const Navbar = () => {
         className="cursor-pointer font-bold text-xl md:text-3xl font-mono pl-4 md:pl-0"
         href=""
       >
-        VertexERP
+        AlphaX Saas
       </a>
       <a
-        className="get-started-btn with-base-gradient text-xs py-2 px-3 md:text-sm md:py-3 md:px-4"
+        className="get-started-btn bg-gradient-to-r from-[#774A67] to-[#774A67] hover:from-[#774A67] hover:to-[#774A67] text-xs py-2 px-3 md:text-sm md:py-3 md:px-4"
         href=""
         onClick={(e) => {
           e.preventDefault();
-          toggleStarted();
+          toggleSignUp();
         }}
       >
         Get started

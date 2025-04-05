@@ -92,15 +92,63 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
     });
     togglePayment();
   };
+  const plans = [
+    {
+      title: "Basic",
+      price: "300",
+      currency: "SAR",
+      features: [
+        "Accounting",
+        "Inventory",
+        "Number of Users: 1",
+      ],
+    },
+    {
+      title: "Standard",
+      price: "400",
+      currency: "SAR",
+      features: [
+        "Accounting",
+        "Inventory",
+        "HR with 5 Employees",
+        "Number of Users: 3",
+      ],
+    },
+    {
+      title: "Premium",
+      price: "500",
+      currency: "SAR",
+      features: [
+        "Accounting",
+        "Inventory",
+        "HR with 10 Employees",
+        "Fixed Assets",
+        "Number of Users: 5",
+      ],
+    },
+    {
+      title: "Platinum",
+      price: "600",
+      currency: "SAR",
+      features: [
+        "Accounting",
+        "Inventory",
+        "CRM",
+        "HR with 20 Employees",
+        "Fixed Assets",
+        "Number of Users: 5",
+      ],
+    },
+  ];
   return (
     <div
-      className='max-w-[42rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
+      className='max-w-[80rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
       id='pricing'
     >
       <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
-        <h2 className='text-2xl font-bold md:text-4xl md:leading-tight dark:text-white'>
+        {/* <h2 className='text-2xl font-bold md:text-4xl md:leading-tight dark:text-white'>
           {mainTitle}
-        </h2>
+        </h2> */}
         {isExpiredPlan ? <p className='mt-1 text-red-600 dark:text-red-400'>
           * Your trial has eneded, please kindly upgrade to continue
         </p> :
@@ -109,8 +157,94 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
           </p>
         }
       </div>
+      {/*  */}
+      <div
+      className='max-w-[90rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
+      id='pricing'
+    >
+      <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
+        <h2 className='text-3xl font-bold md:text-5xl md:leading-tight dark:text-white'>
+          {mainTitle}
+        </h2>
+      </div>
 
-      <div className={cn('mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:items-center', { "md:grid-cols-1": isExpiredPlan })}>
+      <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+        {plans.map((plan, index) => (
+          <div 
+            key={index} 
+            className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-shadow bg-white dark:bg-gray-900 transform hover:scale-105 transition-transform'
+          >
+            <h4 className='font-semibold text-3xl text-gray-800 dark:text-gray-200'>
+              {plan.title}
+            </h4>
+            <span className='mt-3 font-bold text-6xl text-gray-800 dark:text-yellow-400'>
+              <span className='text-sm font-medium text-gray-500 dark:text-gray-400'>{plan.currency}</span> {plan.price}
+              <span className='text-sm'>/month</span>
+            </span>
+            <ul className='mt-5 space-y-2.5 text-sm'>
+              {plan.features.map((feature, i) => (
+                <li key={i} className='flex space-x-2'>
+                  <TickMark />
+                  <span className='text-gray-800 dark:text-gray-400'>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <div className='mt-6'>
+              <a
+                className='py-3 px-5 text-sm font-semibold rounded-lg border border-transparent bg-gradient-to-r from-[#774A67] to-[#774A67] text-white hover:bg-violet-700 transition-all dark:hover:bg-violet-800 w-full block shadow-md hover:shadow-lg'
+                href=''
+              >
+                {cta}
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+      {/*  */}
+        {/* Test */}
+        {/* <div
+      className='max-w-[90rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
+      id='pricing'
+    >
+      <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
+        <h2 className='text-5xl font-bold md:text-5xl md:leading-tight dark:text-white'>
+          {mainTitle}
+        </h2>
+      </div>
+
+      <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+        {plans.map((plan, index) => (
+          <div key={index} className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700'>
+            <h4 className='font-semibold text-xl text-gray-800 dark:text-gray-200'>
+              {plan.title}
+            </h4>
+            <span className='mt-3 font-bold text-5xl text-gray-800 dark:text-yellow-400'>
+              <span className='text-lg font-medium'>{plan.currency}</span> {plan.price}
+              <span className='text-sm'>/month</span>
+            </span>
+            <ul className='mt-5 space-y-2.5 text-sm'>
+              {plan.features.map((feature, i) => (
+                <li key={i} className='flex space-x-2'>
+                  <TickMark />
+                  <span className='text-gray-800 dark:text-gray-400'>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <div className='mt-6'>
+              <a
+                className='py-3 px-5 text-sm font-semibold rounded-lg border border-transparent bg-violet-600 text-white hover:bg-violet-700 transition-all dark:hover:bg-violet-800 w-full block'
+                href=''
+              >
+                {cta}
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div> */}
+        {/* test end */}
+      {/* <div className={cn('mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:items-center', { "md:grid-cols-1": isExpiredPlan })}>
         {!isExpiredPlan && (
           <div className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700'>
             <h4 className='font-medium text-lg text-gray-800 dark:text-gray-200'>
@@ -244,7 +378,7 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
             {cta}
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

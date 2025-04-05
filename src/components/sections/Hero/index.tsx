@@ -8,7 +8,7 @@ const Hero = () => {
     <section className="wrapper">
       <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-[20dvh] mb-10 sm:mb-20">
         {/* waitlist button */}
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <a className="pro-release-wrapper" href="">
             PRO release - Join to waitlist
             <span
@@ -18,20 +18,20 @@ const Hero = () => {
               <Icons.WaitListChevronRight />
             </span>
           </a>
-        </div>
+        </div> */}
         {/* main headline */}
         <div className="mt-5 max-w-2xl text-center mx-auto">
           <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl dark:text-gray-200">
             Rethink Your{" "}
-            <span className="bg-clip-text with-base-gradient text-transparent">
+            <span className="bg-gradient-to-r from-[#774A67] to-[#774A67] bg-clip-text text-transparent">
               Business Management
             </span>
           </h1>
         </div>
         {/* sub headline */}
-        <div className="mt-5 max-w-3xl text-center mx-auto">
+        <div className="mt-5 max-w-4xl text-center mx-auto">
           <p className="text-sm md:text-lg text-gray-600 dark:text-gray-400">
-            Vertex ERP is a system that empowers your business through efficient
+            AlphaX Saas is a system that empowers your business through efficient
             marketing, seamless subscriber tracking, and robust management
             capabilities.
           </p>
@@ -39,7 +39,7 @@ const Hero = () => {
         {/* get started */}
         <div className="mt-8 gap-3 flex justify-center flex-col-reverse sm:flex-row">
           <a
-            className="get-started-btn with-base-gradient"
+            className="get-started-btn bg-gradient-to-r from-[#774A67] to-[#774A67] hover:from-[#774A67] hover:to-[#774A67]"
             href=""
             onClick={(e) => {
               e.preventDefault();
@@ -50,7 +50,7 @@ const Hero = () => {
             <Icons.GetStartedChevronRight />
           </a>
           {/* <button type="button" className="group yarn-add-wrapper">
-            $ yarn add vertex-erp
+            $ yarn add AlphaX Saas
             <span className="flex justify-center items-center bg-gray-200 rounded-md w-7 h-7 dark:bg-gray-700 dark:text-gray-400">
               <Icons.YarnAddCopy />
             </span>
@@ -76,7 +76,7 @@ const Hero = () => {
         {/* rating and partners */}
         <div className="mt-6 sm:mt-12 lg:mt-16 flex gap-5 md:gap-12 justify-center flex-col sm:flex-row">
           {/* ratings */}
-          <div className="flex gap-0 justify-between sm:gap-8 sm:justify-center scale-95 md:scale-100">
+          {/* <div className="flex gap-0 justify-between sm:gap-8 sm:justify-center scale-95 md:scale-100">
             <div className="pt-2">
               <div className="flex space-x-1">
                 <Icons.FullStar />
@@ -112,9 +112,9 @@ const Hero = () => {
                 <Icons.Forbes />
               </div>
             </div>
-          </div>
+          </div> */}
           {/* partners */}
-          <div className="flex gap-8 scale-95 md:scale-100">
+          {/* <div className="flex gap-8 scale-95 md:scale-100">
             <div className="pb-5">
               <div className="">
                 <span className="text-xs font-medium text-gray-800 uppercase dark:text-gray-200">
@@ -127,7 +127,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

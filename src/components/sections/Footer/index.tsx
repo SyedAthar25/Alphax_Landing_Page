@@ -12,10 +12,10 @@ const Fotter = () => {
             className="font-mono flex-none text-xl font-semibold dark:text-white dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
             href=""
           >
-            VertexERP
+            AlphaX Saas
           </a>
           <p className="mt-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-            © 2023 VertexERP.
+            © 2025 AlphaX Saas.
           </p>
         </div>
 
@@ -221,10 +221,10 @@ const Fotter = () => {
                 href=""
                 aria-label="Brand"
               >
-                VertexERP
+                AlphaX Saas
               </a>
               <p className="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                © 2023 VertexERP.
+                © 2025 AlphaX Saas.
               </p>
             </div>
 

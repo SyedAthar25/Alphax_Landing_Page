@@ -10,6 +10,7 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 body {
+  font-family: 'Cairo';
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -20,6 +21,7 @@ body {
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #020303;
+    font-family: 'Cairo';
   }
 }
 

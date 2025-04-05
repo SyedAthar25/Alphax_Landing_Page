@@ -16,7 +16,7 @@ const Features = () => {
       <div className="w-full flex justify-center">
         <div
           className="rounded-md md:rounded-xl mx-4 mb-5 flex-1 max-w-[85rem]
-        bg-gradient-to-tl from-blue-600/50 to-violet-600/50 dark:from-blue-600/50 dark:to-violet-600/50 p-0 md:p-[2px]"
+        bg-gradient-to-tl from-[#774A67] to-[#774A67] dark:from-[#774A67] dark:to-[#774A67] p-0 md:p-[2px]"
         >
           {/* features grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 items-center gap-8 md:gap-10 bg-white/90 dark:bg-[#03020395] backdrop-blur-sm p-5 md:p-10 rounded-md md:rounded-xl">
