@@ -47,7 +47,46 @@ const Fotter = () => {
             </p>
           </div>
         </div>
+        {/*  */}
+        <div>
+          <h4 className="text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
+          Industries
+          </h4>
 
+          <div className="mt-3 grid space-y-3 text-sm">
+            <p>
+              <a className="footer-items" href="">
+              Finance and insurance
+              </a>
+            </p>
+            <p>
+              <a className="footer-items" href="">
+              Construction
+              </a>
+            </p>
+            <p>
+              <a className="footer-items" href="">
+              Manufacturing
+              </a>
+            </p>
+            <p>
+              <a className="footer-items" href="">
+              Metal fabrication
+              </a>
+            </p>
+            <p>
+              <a className="footer-items" href="">
+              Food and beverage stores
+              </a>
+            </p>
+            <p>
+              <a className="footer-items" href="">
+              Food Manufacturing
+              </a>
+            </p>
+          </div>
+        </div>
+        {/*  */}
         <div>
           <h4 className="text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
             Company
@@ -107,29 +146,10 @@ const Fotter = () => {
               </a>
             </p>
             <p>
-              <a className="footer-items" href="">
-                eBook
-              </a>
+              <h4 className="text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
+              Development
+              </h4>
             </p>
-            <p>
-              <a className="footer-items" href="">
-                What's New
-              </a>
-            </p>
-            <p>
-              <a className="footer-items" href="">
-                Status
-              </a>
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <h4 className="text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
-            Developers
-          </h4>
-
-          <div className="mt-3 grid space-y-3 text-sm">
             <p>
               <a className="footer-items" href="">
                 Api
@@ -137,19 +157,38 @@ const Fotter = () => {
             </p>
             <p>
               <a className="footer-items" href="">
-                Status
+                Customization
               </a>
             </p>
-            <p>
+          </div>
+        </div>
+
+        {/* <div> */}
+          {/* <h4 className="text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
+            Development
+          </h4> */}
+
+          <div className="mt-3 grid space-y-3 text-sm">
+            {/* <p>
               <a className="footer-items" href="">
-                GitHub
+                Api
+              </a>
+            </p> */}
+            {/* <p>
+              <a className="footer-items" href="">
+                Customization
+              </a>
+            </p> */}
+            {/* <p>
+              <a className="footer-items" href="">
+              
               </a>{" "}
               <span className="inline text-blue-600 dark:text-blue-500">
                 — New
               </span>
-            </p>
-          </div>
-
+            </p> */}
+          {/* </div> */}
+{/* 
           <h4 className="mt-7 text-xs font-semibold text-gray-900 uppercase dark:text-gray-100">
             Industries
           </h4>
@@ -165,7 +204,7 @@ const Fotter = () => {
                 Education
               </a>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* languages and socials */}

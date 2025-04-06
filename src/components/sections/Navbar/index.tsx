@@ -15,7 +15,7 @@ const Navbar = () => {
         className="cursor-pointer font-bold text-xl md:text-3xl font-mono pl-4 md:pl-0"
         href=""
       >
-        AlphaX Saas
+        <img src="src/images/alphaxsaas.jpg" alt="logo" className="h-12 w-22" />
       </a>
       <a
         className="get-started-btn bg-gradient-to-r from-[#774A67] to-[#774A67] hover:from-[#774A67] hover:to-[#774A67] text-xs py-2 px-3 md:text-sm md:py-3 md:px-4"
@@ -25,7 +25,7 @@ const Navbar = () => {
           toggleStarted();
         }}
       >
-        Get started
+        Sign In
         <Icons.GetStartedChevronRight />
       </a>
     </nav>

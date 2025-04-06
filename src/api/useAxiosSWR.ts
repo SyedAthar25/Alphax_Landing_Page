@@ -8,8 +8,8 @@ import {  VITE_LAMBDA_URL } from "@constants/index";
 export const ENDPOINTS = {
   // Auth
   login: "/auth/login",
-  signup: "http://64.227.141.207/api/method/vertex_erp.api.auth.signup_and_get_token",
-  createSite: "http://64.227.141.207/api/method/vertex_erp.api.utils.create_new_site",
+  signup: "http://test.neotec.ai/api/method/vertex_erp.api.auth.signup_and_get_token",
+  createSite: "http://test.neotec.ai/api/method/vertex_erp.api.utils.create_new_site",
 
   // Optional
   configSite: "/server/config-site",
