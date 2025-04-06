@@ -3,7 +3,7 @@ import Icons from "../Hero/icons";
 // import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const toggleSignUp = rootStore(({ toggleSignUp }) => toggleSignUp);
+  const toggleStarted = rootStore(({ toggleStarted }) => toggleStarted);
   return (
     <nav
       className="fixed z-[99] filter top-0 left-0 right-0 py-4 md:py-5 
@@ -22,7 +22,7 @@ const Navbar = () => {
         href=""
         onClick={(e) => {
           e.preventDefault();
-          toggleSignUp();
+          toggleStarted();
         }}
       >
         Get started
