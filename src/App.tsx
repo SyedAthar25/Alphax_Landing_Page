@@ -1,6 +1,7 @@
 import { cn } from "@utils/index";
 import { lazy, Suspense, useEffect } from "react";
 import { rootStore } from "./store";
+import 'react-phone-input-2/lib/style.css';
 
 import "./App.css";
 

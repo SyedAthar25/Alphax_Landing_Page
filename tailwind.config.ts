@@ -8,9 +8,14 @@ export default {
   theme: {
     extend: {
       animation: {
+        'spin-slow': 'spin 2s linear infinite',
+        'spin-slow-reverse': 'spin-reverse 3s linear infinite',
         fadeIn: "fadeIn 0.3s ease-in-out",
       },
       keyframes: {
+        'spin-reverse': {
+          to: { transform: 'rotate(-360deg)' },
+            },
         fadeIn: {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },

@@ -10,8 +10,8 @@ export const ENDPOINTS = {
   login: "/auth/login",
   // signup: "http://test.neotec.ai/api/method/vertex_erp.api.auth.signup_and_get_token",
   // createSite: "http://test.neotec.ai/api/method/vertex_erp.api.utils.create_new_site",
-  signup: "http://test.neotechis.com/api/method/vertex_erp.api.auth.signup_and_get_token",
-  createSite: "http://test.neotechis.com/api/method/vertex_erp.api.utils.create_new_site",
+  signup: "https://test.neotechis.com/api/method/vertex_erp.api.auth.signup_and_get_token",
+  createSite: "https://test.neotechis.com/api/method/vertex_erp.api.utils.create_new_site",
 
   // Optional
   configSite: "/server/config-site",
