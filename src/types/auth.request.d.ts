@@ -1,9 +1,18 @@
 import { AxiosResponse } from 'axios';
+// export type LoginResponse = {
+//   message: string;
+//   token?: string;
+//   domain?: string;
+//   isExpired: boolean;
+// };
 export type LoginResponse = {
-  message: string;
-  token?: string;
-  domain?: string;
-  isExpired: boolean;
+  message: string | {
+    message: string;
+    token: string;
+    url: string;
+  };
+  home_page?: string;
+  full_name?: string;
 };
 
 export type DecodedJwt = {

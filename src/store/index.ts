@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode"; // Enable if using real JWTs
 import { DecodedJwt } from "types/auth.request";
 
 type ROOT_DATA = {
@@ -35,51 +35,76 @@ interface rootStore {
   handleClientLogout: () => void;
 }
 
+// 🧩 Full fallback guest JWT for type compatibility
+const fallbackDecodedJwt: DecodedJwt = {
+  sub: "guest-sub-id",
+  email: "guest@example.com",
+  email_verified: false,
+  iss: "frappe-session",
+  "cognito:username": "guest",
+  origin_jti: "guest-origin-jti",
+  aud: "guest-audience",
+  event_id: "guest-event-id",
+  token_use: "access",
+  auth_time: 0,
+  exp: 9999999999,
+  iat: 0,
+  jti: "guest-jti",
+};
+
 export const rootStore = create<rootStore>((set) => ({
   data: INIT_DATA,
+
   toggleStarted: () =>
-    set((state) => {
-      // console.log({ isStarting: !state.data.isStarting });
-      // final update
-      return {
-        data: { ...state.data, isStarting: !state.data.isStarting },
-      };
-    }),
+    set((state) => ({
+      data: { ...state.data, isStarting: !state.data.isStarting },
+    })),
+
   toggleSignUp: () =>
+    set((state) => ({
+      data: { ...state.data, isSignUp: !state.data.isSignUp },
+    })),
+
+  toggleConfigSite: () =>
+    set((state) => ({
+      data: { ...state.data, isConfigSite: !state.data.isConfigSite },
+    })),
+
+  togglePayment: () =>
+    set((state) => ({
+      data: { ...state.data, isPayment: !state.data.isPayment },
+    })),
+
+  confirmPayment: () =>
+    set((state) => ({
+      data: { ...state.data, confirmPayment: true },
+    })),
+
+  handleClientLogin: (accessToken: string) =>
     set((state) => {
-      // console.log({ isStarting: !state.data.isSignUp });
-      // final update
+      localStorage.setItem("in", "true");
+      localStorage.setItem("tk", accessToken);
+      localStorage.setItem("man", JSON.stringify(fallbackDecodedJwt));
+
       return {
-        data: { ...state.data, isSignUp: !state.data.isSignUp },
+        data: {
+          ...state.data,
+          isIn: true,
+          tk: accessToken,
+          man: fallbackDecodedJwt,
+        },
       };
     }),
-  toggleConfigSite: () => set((state) => {
-    return {
-      data: { ...state.data, isConfigSite: !state.data.isConfigSite },
-    }
-  }),
-  togglePayment: () => set((state) => {
-    return {
-      data: { ...state.data, isPayment: !state.data.isPayment },
-    }
-  }),
-  confirmPayment: () => set((state) => {
-    return {
-      data: { ...state.data, confirmPayment: true },
-    }
-  }),
-  handleClientLogin: (accessToken) =>
-    // save global data
+
+  // Optional: use this instead if you switch to real JWTs
+  /*
+  handleClientLogin: (accessToken: string) =>
     set((state) => {
-      // save global login status as TRUE
       localStorage.setItem("in", "true");
-      // save access token
       localStorage.setItem("tk", accessToken);
-      // decode data from token and save them
       const acTokenDecoded = jwtDecode<DecodedJwt>(accessToken);
       localStorage.setItem("man", JSON.stringify(acTokenDecoded));
 
-      // final update
       return {
         data: {
           ...state.data,
@@ -89,6 +114,8 @@ export const rootStore = create<rootStore>((set) => ({
         },
       };
     }),
+  */
+
   handleClientLogout: () => {
     localStorage.setItem("in", "false");
     localStorage.removeItem("tk");

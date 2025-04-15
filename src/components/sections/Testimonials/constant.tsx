@@ -1,6 +1,6 @@
 export const TESTIMONIALS = [
   {
-    content: `" With AlphaX Saas, we're able to easily track our performance
+    content: `" With AlphaX , we're able to easily track our performance
 in full detail. It's become an essential tool for us to grow
 and engage with our audience. "`,
     image:

@@ -2,9 +2,9 @@ import { ENDPOINTS, fetcher } from '@api/useAxiosSWR';
 import { rootStore } from '@store/index';
 import { cn } from '@utils/index';
 import { enqueueSnackbar } from 'notistack';
-import {
-  RegisterTrialResponse
-} from 'types/auth.request';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { RegisterTrialResponse } from 'types/auth.request';
 
 const TickMark = () => (
   <svg
@@ -60,13 +60,16 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
   const togglePayment = rootStore(({ togglePayment }) => togglePayment);
   const toggleConfigSite = rootStore(({ toggleConfigSite }) => toggleConfigSite);
 
+  const [showPopup, setShowPopup] = useState(false);
+
   const mainTitle = isInModal ? 'Choose your plan' : 'Pricing';
-  const cta = isInModal ? 'I Want This' : 'Sign Up';
+  const cta = isInModal ? 'I Want This' : 'Sign In';
 
   const commonOnClick = () => {
     toggleStarted();
-    if (!isSignUp) toggleSignUp();
+    if (!isSignUp) toggleStarted();
   };
+
   const handleFreeClicked = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (!isInModal) {
@@ -76,12 +79,13 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
     enqueueSnackbar(`Registering for a trial plan...`, {
       variant: "info",
     });
-    await registerTrial(tk);
-    toggleConfigSite();
+    const success = await registerTrial(tk);
+    if (success) {
+      toggleStarted();
+    }
   };
-  const handlePremiumClicked = async (
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
+
+  const handlePremiumClicked = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (!isInModal) {
       commonOnClick();
@@ -90,29 +94,24 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
     enqueueSnackbar(`Proceeding to payment...`, {
       variant: "info",
     });
-    togglePayment();
+    setShowPopup(true);
+    setTimeout(() => {
+      toggleStarted();
+    }, 1500);
   };
+
   const plans = [
     {
       title: "Basic",
       price: "300",
       currency: "SAR",
-      features: [
-        "Accounting",
-        "Inventory",
-        "Number of Users: 1",
-      ],
+      features: ["Accounting", "Inventory", "Number of Users: 1"],
     },
     {
       title: "Standard",
       price: "400",
       currency: "SAR",
-      features: [
-        "Accounting",
-        "Inventory",
-        "HR with 5 Employees",
-        "Number of Users: 3",
-      ],
+      features: ["Accounting", "Inventory", "HR with 5 Employees", "Number of Users: 3"],
     },
     {
       title: "Premium",
@@ -140,39 +139,29 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
       ],
     },
   ];
+
   return (
-    <div
-      className='max-w-[80rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
-      id='pricing'
-    >
+    <div className='max-w-[80rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar' id='pricing'>
       <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
-        {/* <h2 className='text-2xl font-bold md:text-4xl md:leading-tight dark:text-white'>
-          {mainTitle}
-        </h2> */}
-        {isExpiredPlan ? <p className='mt-1 text-red-600 dark:text-red-400'>
-          * Your trial has eneded, please kindly upgrade to continue
-        </p> :
+        {isExpiredPlan ? (
+          <p className='mt-1 text-red-600 dark:text-red-400'>
+            * Your trial has eneded, please kindly upgrade to continue
+          </p>
+        ) : (
           <p className='mt-1 text-gray-600 dark:text-gray-400'>
             Whatever your status, our offers evolve according to your needs.
           </p>
-        }
-      </div>
-      {/*  */}
-      <div
-      className='max-w-[90rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
-      id='pricing'
-    >
-      <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
-        <h2 className='text-3xl font-bold md:text-5xl md:leading-tight dark:text-white'>
-          {mainTitle}
-        </h2>
+        )}
       </div>
 
       <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {plans.map((plan, index) => (
-          <div 
-            key={index} 
+          <motion.div
+            key={index}
             className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-shadow bg-white dark:bg-gray-900 transform hover:scale-105 transition-transform'
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.4, type: 'spring' }}
           >
             <h4 className='font-semibold text-3xl text-gray-800 dark:text-gray-200'>
               {plan.title}
@@ -190,20 +179,65 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
               ))}
             </ul>
             <div className='mt-6'>
-              <a
-                className='py-3 px-5 text-sm font-semibold rounded-lg border border-transparent bg-gradient-to-r from-[#774A67] to-[#774A67] text-white hover:bg-violet-700 transition-all dark:hover:bg-violet-800 w-full block shadow-md hover:shadow-lg'
-                href=''
+              <motion.a
+                className="py-3 px-5 text-sm font-semibold rounded-lg border border-transparent text-white w-full block shadow-md"
+                href=""
+                initial={{ background: '#5a3950' }}
+                animate={{
+                  background: [
+                    '#5a3950', // darker
+                    '#774A67', // base
+                    '#8e5779', // lighter
+                    '#774A67',
+                    '#5a3950',
+                  ],
+                  boxShadow: [
+                    '0 2px 8px rgba(119, 74, 103, 0.2)',
+                    '0 4px 12px rgba(119, 74, 103, 0.4)',
+                    '0 2px 8px rgba(119, 74, 103, 0.2)',
+                  ],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  repeatType: 'loop',
+                  ease: 'easeInOut',
+                }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: '0 6px 20px rgba(119, 74, 103, 0.5)',
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleStarted();
+                }}
               >
                 {cta}
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl text-center max-w-sm w-full">
+            <p className="text-gray-800 dark:text-gray-200 mb-4 text-lg">
+              Sit tight. We will be right back.
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="px-4 py-2 bg-violet-600 text-white rounded hover:bg-violet-700 transition"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
       {/*  */}
-        {/* Test */}
-        {/* <div
+      {/* Test */}
+      {/* <div
       className='max-w-[90rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
       id='pricing'
     >
@@ -243,7 +277,7 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
         ))}
       </div>
     </div> */}
-        {/* test end */}
+      {/* test end */}
       {/* <div className={cn('mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:items-center', { "md:grid-cols-1": isExpiredPlan })}>
         {!isExpiredPlan && (
           <div className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700'>

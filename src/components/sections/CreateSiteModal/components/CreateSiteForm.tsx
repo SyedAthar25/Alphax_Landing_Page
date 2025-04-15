@@ -83,7 +83,7 @@ const CreateSiteForm = () => {
     >
       <div className='p-4 sm:p-7'>
         <h1 className='block text-2xl font-bold text-gray-800 dark:text-white text-center'>
-          Create your ALPHAX SAAS site
+          Create your ALPHAX site
         </h1>
         <div className='mt-5'>
           <form className='w-full' onSubmit={handleSubmit(onSubmit)}>

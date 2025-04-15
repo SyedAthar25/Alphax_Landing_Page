@@ -326,8 +326,8 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                   Phone Number <span className="text-red-400">*</span>
                 </label>
                 <PhoneInput
-                  country={"in"}
-                  inputClass="!w-full !py-3 !px-4 !text-sm !border !rounded-lg !dark:bg-slate-900 !dark:border-gray-700 !dark:text-gray-400"
+                  country={"sa"}
+                  inputClass="!w-full !py-3 !pl-14 !px-4 !text-sm !border !rounded-lg !dark:bg-slate-900 !dark:border-gray-700 !dark:text-gray-400"
                   specialLabel={""}
                   value={""}
                   onChange={(value) => {

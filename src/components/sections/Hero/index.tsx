@@ -1,6 +1,9 @@
 import { rootStore } from "@store/index";
 import Icons from "./icons";
 import "./style.css";
+import { motion } from 'framer-motion';
+
+
 
 const Hero = () => {
   const toggleStarted = rootStore(({ toggleStarted }) => toggleStarted);
@@ -20,25 +23,80 @@ const Hero = () => {
           </a>
         </div> */}
         {/* main headline */}
-        <div className="mt-5 max-w-2xl text-center mx-auto">
-          <h1 className="block font-bold text-gray-800 text-4xl md:text-5xl lg:text-6xl dark:text-gray-200">
+        <div className="mt-5 max-w-4xl text-center mx-auto">
+          <h1 className="block font-bold text-gray-800 text-5xl md:text-6xl lg:text-7xl dark:text-gray-200 glow-text1">
             Rethink Your{" "}
-            <span className="bg-gradient-to-r from-[#774A67] to-[#774A67] bg-clip-text text-transparent">
+            <span className="block font-bold text-[#774A67] text-6xl md:text-7xl lg:text-8xl dark:text-gray-200 glow-text1">
               Business Management
             </span>
           </h1>
+
+          <style>
+            {`
+            .glow-text1 {
+              text-shadow:
+                1px 1px 2px #582f4b,
+                2px 2px 4px #774A67,
+                3px 3px 6px #9e628b;
+            }
+                .glow-text2 {
+              text-shadow:
+                1px 1px 2px rgb(36, 35, 36),
+                2px 2px 4px rgb(34, 33, 34),
+                3px 3px 6px rgb(128, 126, 127);
+            }
+          `}
+          </style>
         </div>
         {/* sub headline */}
         <div className="mt-5 max-w-4xl text-center mx-auto">
           <p className="text-sm md:text-lg text-gray-600 dark:text-gray-400">
-            AlphaX Saas is a system that empowers your business through efficient
+            AlphaX is a system that empowers your business through efficient
             marketing, seamless subscriber tracking, and robust management
             capabilities.
           </p>
         </div>
         {/* get started */}
         <div className="mt-8 gap-3 flex justify-center flex-col-reverse sm:flex-row">
-          <a
+          <motion.a
+            className="get-started-btn bg-gradient-to-r from-[#774A67] to-[#774A67] hover:from-[#774A67] hover:to-[#774A67] py-3 px-6 text-white rounded-lg shadow-md text-sm font-semibold"
+            href=""
+            initial={{ background: '#5a3950' }}
+            animate={{
+              background: [
+                '#5a3950', // darker
+                '#774A67', // base
+                '#8e5779', // lighter
+                '#774A67',
+                '#5a3950',
+              ],
+              boxShadow: [
+                '0 2px 8px rgba(119, 74, 103, 0.2)',
+                '0 4px 12px rgba(119, 74, 103, 0.4)',
+                '0 2px 8px rgba(119, 74, 103, 0.2)',
+              ],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              repeatType: 'loop',
+              ease: 'easeInOut',
+            }}
+            whileHover={{
+              scale: 1.05,
+              boxShadow: '0 6px 20px rgba(119, 74, 103, 0.5)',
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleStarted();
+            }}
+          >
+            Get started
+            <Icons.GetStartedChevronRight />
+          </motion.a>
+        </div>
+        {/* <div className="mt-8 gap-3 flex justify-center flex-col-reverse sm:flex-row"> */}
+        {/* <a
             className="get-started-btn bg-gradient-to-r from-[#774A67] to-[#774A67] hover:from-[#774A67] hover:to-[#774A67]"
             href=""
             onClick={(e) => {
@@ -48,14 +106,14 @@ const Hero = () => {
           >
             Get started
             <Icons.GetStartedChevronRight />
-          </a>
-          {/* <button type="button" className="group yarn-add-wrapper">
+          </a> */}
+        {/* <button type="button" className="group yarn-add-wrapper">
             $ yarn add AlphaX Saas
             <span className="flex justify-center items-center bg-gray-200 rounded-md w-7 h-7 dark:bg-gray-700 dark:text-gray-400">
               <Icons.YarnAddCopy />
             </span>
           </button> */}
-        </div>
+        {/* </div> */}
         {/* package manager */}
         {/* <div className="mt-5 flex justify-center items-center gap-x-1 sm:gap-x-3">
           <span className="text-sm text-gray-600 dark:text-gray-400">

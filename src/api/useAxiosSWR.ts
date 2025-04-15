@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWR from "swr";
 import AxiosFetcher from "./AxiosFetcher";
-import {  VITE_LAMBDA_URL } from "@constants/index";
+import { VITE_LAMBDA_URL } from "@constants/index";
 // VITE_BE_DOMAIN,
 
 // ENDPOINTS keys
 export const ENDPOINTS = {
   // Auth
-  login: "/auth/login",
-  // signup: "http://test.neotec.ai/api/method/vertex_erp.api.auth.signup_and_get_token",
-  // createSite: "http://test.neotec.ai/api/method/vertex_erp.api.utils.create_new_site",
-  signup: "https://test.neotechis.com/api/method/vertex_erp.api.auth.signup_and_get_token",
-  createSite: "https://test.neotechis.com/api/method/vertex_erp.api.utils.create_new_site",
+  login: "https://test.neotechis.com/api/method/alphax_erp.api.login.login",
+  logout: "https://test.neotechis.com/api/method/alphax_erp.api.login.logout",
+  // signup: "http://test.neotec.ai/api/method/alphax_erp.api.auth.signup_and_get_token",
+  // createSite: "http://test.neotec.ai/api/method/alphax_erp.api.utils.create_new_site",
+  signup: "https://test.neotechis.com/api/method/alphax_erp.api.auth.signup_and_get_token",
+  createSite: "https://test.neotechis.com/api/method/alphax_erp.api.utils.create_new_site",
 
   // Optional
   configSite: "/server/config-site",
