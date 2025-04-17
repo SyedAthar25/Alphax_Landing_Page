@@ -22,7 +22,7 @@ const TickMark = () => (
     <polyline points='20 6 9 17 4 12' />
   </svg>
 );
-
+// final changes
 type Props = {
   isInModal?: boolean;
   isExpiredPlan?: boolean;

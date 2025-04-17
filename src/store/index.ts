@@ -12,7 +12,7 @@ type ROOT_DATA = {
   man: DecodedJwt | null;
   tk: string;
 };
-
+// final changes
 const INIT_DATA: ROOT_DATA = {
   isStarting: false,
   isSignUp: false,

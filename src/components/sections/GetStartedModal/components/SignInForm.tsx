@@ -31,7 +31,7 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
   const onSubmit = async (data: { email: string; password: string }) => {
     console.log("🔐 Attempting login with:", data);
     setLogging(true);
-
+    // final working
     try {
       // Step 1: Clear previous session
       localStorage.removeItem("sid");

@@ -17,6 +17,7 @@ const Fotter = () => {
   ];
 
   return (
+    // Final Changes
     <footer className="w-full max-w-[85rem] py-10 px-4 sm:px-6 lg:px-8 mx-auto">
       {/* footer links */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mb-10">

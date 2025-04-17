@@ -14,6 +14,7 @@ export type LoginResponse = {
   home_page?: string;
   full_name?: string;
 };
+// final changes
 
 export type DecodedJwt = {
   sub: string;

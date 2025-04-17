@@ -23,6 +23,7 @@ const Hero = () => {
           </a>
         </div> */}
         {/* main headline */}
+        {/* Final Changes */}
         <div className="mt-5 max-w-4xl text-center mx-auto">
           <h1 className="block font-bold text-gray-800 text-5xl md:text-6xl lg:text-7xl dark:text-gray-200 glow-text1">
             Rethink Your{" "}

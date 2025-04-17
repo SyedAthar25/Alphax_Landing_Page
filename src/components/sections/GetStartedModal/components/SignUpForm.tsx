@@ -9,7 +9,7 @@ import PhoneInput from "react-phone-input-2";
 type Props = {
   toggleSignUp: () => void;
 };
-
+// Final working
 const SignUpForm = ({ toggleSignUp }: Props) => {
   const {
     register,

@@ -6,6 +6,7 @@ import Icons from "../Hero/icons";
 const Navbar = () => {
   const toggleStarted = rootStore(({ toggleStarted }) => toggleStarted);
   return (
+    // final changes
     <nav
       className="fixed z-[99] filter top-0 left-0 right-0 py-4 md:py-5 
     px-4 md:px-10 max-w-[110rem] flex items-center justify-between 
