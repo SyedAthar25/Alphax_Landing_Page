@@ -188,7 +188,7 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
                     '#5a3950', // darker
                     '#774A67', // base
                     '#8e5779', // lighter
-                    '#774A67',
+                    '#774A67', //
                     '#5a3950',
                   ],
                   boxShadow: [
