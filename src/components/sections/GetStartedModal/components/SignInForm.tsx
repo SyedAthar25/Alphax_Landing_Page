@@ -31,30 +31,53 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
   const onSubmit = async (data: { email: string; password: string }) => {
     console.log("🔐 Attempting login with:", data);
     setLogging(true);
-    // final working
     try {
-      // Step 1: Clear previous session
+      // Step 1: Clear previous session if it exists
+      const sid = localStorage.getItem("sid");
       localStorage.removeItem("sid");
       console.log("🧹 Cleared localStorage token");
 
-      await fetch("https://test.neotechis.com/api/method/logout", {
-        method: "GET",
-        credentials: "include",
-      });
-      console.log("🔄 Forced logout of any existing session");
+      if (sid) {
+        // Only call logout if there was a previous session
+        try {
+          const logoutRes = await fetch(
+            "https://test.neotechis.com/api/method/alphax_erp.api.login.logout_user",
+            {
+              method: "GET",
+              credentials: "include",
+            }
+          );
+          console.log("🔄 Logout response status:", logoutRes.status);
+
+          if (!logoutRes.ok) {
+            console.warn("⚠️ Logout failed:", logoutRes.status, await logoutRes.text());
+            // Proceed with login even if logout fails (e.g., 403 for no active session)
+          } else {
+            console.log("🔄 Forced logout of any existing session");
+          }
+        } catch (logoutError) {
+          console.warn("⚠️ Error during logout, proceeding with login:", logoutError);
+          // Continue with login even if logout fails
+        }
+      } else {
+        console.log("ℹ️ No previous session, skipping logout");
+      }
 
       // Step 2: Login
-      const loginRes = await fetch("https://test.neotechis.com/api/method/alphax_erp.api.login.login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
+      const loginRes = await fetch(
+        "https://test.neotechis.com/api/method/alphax_erp.api.login.login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        }
+      );
 
       console.log("📥 Login response status:", loginRes.status);
 
@@ -62,8 +85,21 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
         const err = await loginRes.json();
         console.error("❌ Login failed:", err);
 
-        const messages = JSON.parse(err._server_messages || "[]");
-        const errorMsg = messages.length ? messages[0] : err.message || "Login failed";
+        let errorMsg = "Login failed";
+        if (loginRes.status === 401) {
+          errorMsg = err.message || "Invalid email or password";
+        } else if (loginRes.status === 500) {
+          errorMsg = err.message || "Something went wrong, please try again later.";
+        } else {
+          try {
+            const messages = JSON.parse(err._server_messages || "[]");
+            errorMsg = messages.length ? messages[0] : err.message || "Login failed";
+          } catch {
+            errorMsg = err.message || "Unexpected error occurred";
+          }
+        }
+
+        enqueueSnackbar(errorMsg, { variant: "error" });
         throw new Error(errorMsg);
       }
 
@@ -89,12 +125,12 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
 
       setTimeout(() => {
         const redirectUrl = url || "https://test.neotechis.com/dashboard";
-        console.log("➡️ Redirecting to:", redirectUrl);
-        location.replace(redirectUrl);
+        console.log("➡️ Opening in new tab:", redirectUrl);
+        window.open(redirectUrl, "_blank");
       }, 500);
     } catch (error) {
       console.error("🚨 Login error:", error);
-      enqueueSnackbar((error as Error).message || "Login failed", {
+      enqueueSnackbar("An unexpected error occurred. Please try again.", {
         variant: "error",
       });
     } finally {
@@ -105,13 +141,13 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
   return (
     <div
       className={cn(
-        "w-full mx-4 my-4 lg:mx-0 lg:mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700 md:max-w-[450px]",
+        "w-full mx-4 my-4 lg:mx-0 lg:mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700 md:max-w-[450px] ",
         loginSuccess && "md:max-w-max"
       )}
     >
       {!loginSuccess && (
         <div className="p-4 sm:p-7">
-          <h1 className="block text-2xl font-bold text-gray-800 dark:text-white text-center">
+          <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-[#00f0ff] neon-glow">
             Sign in
           </h1>
 
@@ -119,14 +155,14 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
             <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
               <div className="grid gap-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm mb-2 dark:text-white">
+                  <label htmlFor="email" className="block text-base mb-2 dark:text-white">
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
                     id="email"
-                    className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-                    placeholder="Enter your lovely email"
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
+                    placeholder="Enter your E-mail"
                     {...register("email", {
                       required: "Email is required",
                       pattern: {
@@ -144,13 +180,13 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm mb-2 dark:text-white">
+                  <label htmlFor="password" className="block text-base mb-2 dark:text-white">
                     Password <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="password"
                     id="password"
-                    className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                     placeholder="Enter your password"
                     {...register("password", {
                       required: "Password is required",
@@ -171,7 +207,7 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
                 <button
                   type="submit"
                   disabled={logging}
-                  className="w-full mt-4 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#774A67] text-white hover:bg-[#774A67] disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                  className="w-full mt-4 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-[#774A67] text-white hover:bg-[#774A67] hover:shadow-[0_0_15px_#774A67] focus:outline-none focus:ring-2 focus:ring-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300 disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {logging ? <Loader /> : "Sign in"}
                 </button>
@@ -184,7 +220,7 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
           </div>
 
           <div className="text-center">
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-base text-gray-600 dark:text-gray-400">
               Don't have an account yet?
               <a
                 className="text-blue-600 decoration-2 hover:underline font-medium dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
@@ -207,7 +243,7 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
 export default SignInForm;
 
 
-
+// location.replace(redirectUrl); <----- imp do not remove
 
 // import { EMAIL_PATTERN } from "@constants/index";
 // import { ENDPOINTS, fetcher } from "@api/useAxiosSWR";

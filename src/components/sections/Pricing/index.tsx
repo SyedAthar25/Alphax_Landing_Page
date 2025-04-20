@@ -143,25 +143,28 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
   return (
     <div className='max-w-[80rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar' id='pricing'>
       <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
+        <h2 className='text-5xl font-bold md:text-5xl md:leading-tight dark:text-white neon-glow'>
+          {mainTitle}
+        </h2>
+        <p className='mt-1 text-gray-600 dark:text-gray-400'>
+          Whatever your status, our offers evolve according to your needs.
+        </p>
+      </div>
+      {/* <div className='max-w-2xl mx-auto text-center mb-10 lg:mb-14'>
         {isExpiredPlan ? (
           <p className='mt-1 text-red-600 dark:text-red-400'>
             * Your trial has eneded, please kindly upgrade to continue
           </p>
         ) : (
-          <p className='mt-1 text-gray-600 dark:text-gray-400'>
-            Whatever your status, our offers evolve according to your needs.
-          </p>
+          
         )}
-      </div>
+      </div> */}
 
       <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {plans.map((plan, index) => (
-          <motion.div
+          <div
             key={index}
             className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-shadow bg-white dark:bg-gray-900 transform hover:scale-105 transition-transform'
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.4, type: 'spring' }}
           >
             <h4 className='font-semibold text-3xl text-gray-800 dark:text-gray-200'>
               {plan.title}
@@ -179,43 +182,18 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
               ))}
             </ul>
             <div className='mt-6'>
-              <motion.a
-                className="py-3 px-5 text-sm font-semibold rounded-lg border border-transparent text-white w-full block shadow-md"
+              <a
+                className="py-3 px-5 text-sm font-semibold rounded-lg border border-transparent text-white w-full block shadow-md bg-[#774A67] hover:bg-[#774A67] hover:shadow-[0_0_15px_#774A67] focus:outline-none focus:ring-2 focus:ring-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                 href=""
-                initial={{ background: '#5a3950' }}
-                animate={{
-                  background: [
-                    '#5a3950', // darker
-                    '#774A67', // base
-                    '#8e5779', // lighter
-                    '#774A67', //
-                    '#5a3950',
-                  ],
-                  boxShadow: [
-                    '0 2px 8px rgba(119, 74, 103, 0.2)',
-                    '0 4px 12px rgba(119, 74, 103, 0.4)',
-                    '0 2px 8px rgba(119, 74, 103, 0.2)',
-                  ],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  repeatType: 'loop',
-                  ease: 'easeInOut',
-                }}
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: '0 6px 20px rgba(119, 74, 103, 0.5)',
-                }}
                 onClick={(e) => {
                   e.preventDefault();
                   toggleStarted();
                 }}
               >
                 {cta}
-              </motion.a>
+              </a>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 

@@ -24,7 +24,7 @@ const Fotter = () => {
         <div className="col-span-full hidden lg:col-span-1 lg:block">
           <a
             aria-label="Brand"
-            className="font-mono flex-none text-xl font-semibold dark:text-white"
+            className="font-mono flex-none text-xl font-semibold dark:text-white neon-glow"
             href="#"
           >
             AlphaX

@@ -2,23 +2,29 @@
 import useSWR from "swr";
 import AxiosFetcher from "./AxiosFetcher";
 import { VITE_LAMBDA_URL } from "@constants/index";
+
 // VITE_BE_DOMAIN,
 
 // ENDPOINTS keys
 export const ENDPOINTS = {
   // Auth
   login: "https://test.neotechis.com/api/method/alphax_erp.api.login.login", // Login 
-  logout: "https://test.neotechis.com/api/method/alphax_erp.api.login.logout",
+  logout: "https://test.neotechis.com/api/method/alphax_erp.api.login.logout_user",
   // signup: "http://test.neotec.ai/api/method/alphax_erp.api.auth.signup_and_get_token",
   // createSite: "http://test.neotec.ai/api/method/alphax_erp.api.utils.create_new_site",
   signup: "https://test.neotechis.com/api/method/alphax_erp.api.auth.signup_and_get_token",
   createSite: "https://test.neotechis.com/api/method/alphax_erp.api.utils.create_new_site",
+  // checkUserInputAvailability: "https://test.neotechis.com/api/method/alphax_erp.api.validate_user_input.validate_user_input",
+  validateFirstName: "https://test.neotechis.com/api/method/alphax_erp.api.validate_user_input.validate_first_name",
+  validateEmail: "https://test.neotechis.com/api/method/alphax_erp.api.validate_user_input.validate_email",
+  validateSiteName: "https://test.neotechis.com/api/method/alphax_erp.api.validate_user_input.validate_site_name",
 
   // Optional
   configSite: "/server/config-site",
   registerTrial: "/user/trial",
   registerPremium: "/user/premium",
 };
+
 
 // Axios instances
 export const fetcher = new AxiosFetcher(import.meta.env.VITE_BE_DOMAIN);

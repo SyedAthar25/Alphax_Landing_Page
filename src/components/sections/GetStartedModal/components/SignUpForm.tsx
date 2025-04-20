@@ -2,20 +2,60 @@ import { ENDPOINTS, fetcher } from "@api/useAxiosSWR";
 import { EMAIL_PATTERN } from "@constants/index";
 import { AxiosError } from "axios";
 import { enqueueSnackbar } from "notistack";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 
 type Props = {
   toggleSignUp: () => void;
 };
-// Final working
+
+// Type definitions for API responses
+interface ValidationResponse {
+  exists: boolean;
+  message: string;
+}
+
+interface ValidationApiResponse {
+  status: number;
+  message: ValidationResponse;
+}
+
+interface SignupResponse {
+  token?: string;
+  site_url?: string;
+  message?: {
+    token?: string;
+    site_url?: string;
+  };
+}
+
+// Custom debounce function
+const debounce = <F extends (...args: any[]) => any>(
+  func: F,
+  wait: number
+): ((...args: Parameters<F>) => void) => {
+  let timeout: NodeJS.Timeout | null = null;
+
+  return (...args: Parameters<F>) => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+};
+
 const SignUpForm = ({ toggleSignUp }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
     reset,
+    setError,
+    clearErrors,
+    setFocus,
   } = useForm({
     defaultValues: {
       firstName: "",
@@ -52,9 +92,101 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
     if (step >= 0) {
       setCurrentStep(step);
     } else {
-      // Calculate step based on progress
       const newStep = Math.min(Math.floor(value / 20), 4);
       setCurrentStep(newStep);
+    }
+  };
+
+  // Debounced functions for each field
+  const checkFirstName = useCallback(
+    debounce(async (first_name: string, field: "firstName") => {
+      try {
+        console.log("Checking first_name:", first_name);
+        const response = (await fetcher.post(ENDPOINTS.validateFirstName, { first_name })) as ValidationApiResponse;
+        const validationData = response.message;
+        console.log("First name check response:", response);
+
+        clearErrors(field);
+        if (validationData.exists) {
+          setError(field, { type: "manual", message: validationData.message });
+          setTimeout(() => setFocus(field), 0);
+          console.log(`Set error for ${field}: ${validationData.message}`);
+        }
+        console.log("Current form errors after checkFirstName:", formErrors);
+      } catch (error) {
+        console.error("Error checking first_name:", error);
+        enqueueSnackbar("Failed to validate first name. Please try again.", { variant: "error", style: { color: "#DC2626" } });
+      }
+    }, 500),
+    [setError, clearErrors, setFocus, formErrors]
+  );
+
+  const checkEmail = useCallback(
+    debounce(async (email: string, field: "email") => {
+      try {
+        console.log("Checking email:", email);
+        const response = (await fetcher.post(ENDPOINTS.validateEmail, { email })) as ValidationApiResponse;
+        const validationData = response.message;
+        console.log("Email check response:", response);
+
+        clearErrors(field);
+        if (validationData.exists) {
+          setError(field, { type: "manual", message: validationData.message });
+          setTimeout(() => setFocus(field), 0);
+          console.log(`Set error for ${field}: ${validationData.message}`);
+        }
+        console.log("Current form errors after checkEmail:", formErrors);
+      } catch (error) {
+        console.error("Error checking email:", error);
+        enqueueSnackbar("Failed to validate email. Please try again.", { variant: "error", style: { color: "#DC2626" } });
+      }
+    }, 500),
+    [setError, clearErrors, setFocus, formErrors]
+  );
+
+  const checkSiteName = useCallback(
+    debounce(async (site_name: string, field: "siteName") => {
+      try {
+        console.log("Checking site_name:", site_name);
+        const response = (await fetcher.post(ENDPOINTS.validateSiteName, { site_name })) as ValidationApiResponse;
+        const validationData = response.message;
+        console.log("Site name check response:", response);
+
+        clearErrors(field);
+        if (validationData.exists) {
+          setError(field, { type: "manual", message: validationData.message });
+          setTimeout(() => setFocus(field), 0);
+          console.log(`Set error for ${field}: ${validationData.message}`);
+        }
+        console.log("Current form errors after checkSiteName:", formErrors);
+      } catch (error) {
+        console.error("Error checking site_name:", error);
+        enqueueSnackbar("Failed to validate site name. Please try again.", { variant: "error", style: { color: "#DC2626" } });
+      }
+    }, 500),
+    [setError, clearErrors, setFocus, formErrors]
+  );
+
+  // Handle blur to prevent leaving field with error
+  const handleBlur = (field: "firstName" | "email" | "siteName") => {
+    if (formErrors[field]) {
+      setTimeout(() => setFocus(field), 0);
+      console.log(`Retained focus on ${field} due to error: ${formErrors[field]?.message}`);
+    }
+  };
+
+  // Conditional validation for onChange
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: "firstName" | "email" | "siteName"
+  ) => {
+    const value = e.target.value.trim();
+    if (value === "") {
+      clearErrors(field); // Let required validation handle empty input
+    } else {
+      if (field === "firstName") checkFirstName(value, field);
+      if (field === "email") checkEmail(value, field);
+      if (field === "siteName") checkSiteName(value, field);
     }
   };
 
@@ -65,37 +197,67 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
     try {
       // Step 1: Validate data
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate validation time
+      updateProgress(10, "Checking for duplicates...", 0);
+
+      const firstNameResponse = (await fetcher.post(ENDPOINTS.validateFirstName, { first_name: data.firstName })) as ValidationApiResponse;
+      const emailResponse = (await fetcher.post(ENDPOINTS.validateEmail, { email: data.email })) as ValidationApiResponse;
+      const siteNameResponse = (await fetcher.post(ENDPOINTS.validateSiteName, { site_name: data.siteName })) as ValidationApiResponse;
+
+      const firstNameCheck = firstNameResponse.message;
+      const emailCheck = emailResponse.message;
+      const siteNameCheck = siteNameResponse.message;
+
+      console.log("Submission checks:", { firstNameCheck, emailCheck, siteNameCheck });
+
+      if (firstNameCheck.exists) {
+        setError("firstName", { type: "manual", message: firstNameCheck.message });
+        setFocus("firstName");
+        console.log("Submission error for firstName:", firstNameCheck.message);
+        throw new Error("Duplicate first name");
+      }
+      if (emailCheck.exists) {
+        setError("email", { type: "manual", message: emailCheck.message });
+        setFocus("email");
+        console.log("Submission error for email:", emailCheck.message);
+        throw new Error("Duplicate email");
+      }
+      if (siteNameCheck.exists) {
+        setError("siteName", { type: "manual", message: siteNameCheck.message });
+        setFocus("siteName");
+        console.log("Submission error for siteName:", siteNameCheck.message);
+        throw new Error("Duplicate site name");
+      }
+
       updateProgress(20, "Validating your information...", 0);
-      console.log("Sending signup request to:", ENDPOINTS.signup);
-      
+      await new Promise(resolve => setTimeout(resolve, 800));
+
       // Step 2: Create account
       updateProgress(40, "Creating your account...", 1);
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate account creation time
-      
-      const response: any = await fetcher.post(ENDPOINTS.signup, { ...data })
-        .catch(error => {
-          console.error("API request failed:", error);
-          console.log("Error response data:", error.response?.data);
-          console.log("Error status:", error.response?.status);
-          throw error;
-        });
-      
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      console.log("Sending signup request to:", ENDPOINTS.signup);
+      const response = await fetcher.post(ENDPOINTS.signup, { ...data }).catch(error => {
+        console.error("API request failed:", error);
+        console.log("Error response data:", error.response?.data);
+        console.log("Error status:", error.response?.status);
+        throw error;
+      }) as SignupResponse;
+
       console.log("Signup API response received:", response);
-      
+
       // Step 3: Configure site
       updateProgress(60, "Setting up your site...", 2);
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate site setup time
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const token = response?.token ?? response?.message?.token ?? null;
       const site_url = response?.site_url ?? response?.message?.site_url ?? null;
 
       console.log("Extracted token:", token ? "Token exists" : "Token missing");
       console.log("Extracted site_url:", site_url);
-      
+
       // Step 4: Finalize
       updateProgress(80, "Finalizing your workspace...", 3);
-      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate finalization time
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       if (token && site_url) {
         console.log("Signup successful, proceeding to redirect");
@@ -116,8 +278,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
       }
     } catch (error) {
       console.error("Signup process error:", error);
-      
-      // Log detailed error information
+
       if ((error as AxiosError).isAxiosError) {
         const axiosError = error as AxiosError;
         console.error("Axios error details:", {
@@ -127,28 +288,26 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
           headers: axiosError.response?.headers,
         });
       }
-      
+
       const errorMessage =
         ((error as AxiosError)?.response?.data as { message: string })?.message ||
         (error as Error).message ||
         "Internal error. Please try again later";
 
       console.error("Error message to display:", errorMessage);
-      enqueueSnackbar(errorMessage, { variant: "error" });
+      enqueueSnackbar(errorMessage, { variant: "error", style: { color: "#DC2626" } });
       updateProgress(100, "Something went wrong.");
     } finally {
       console.log("Signup process completed");
-      // We don't set signing to false here to keep the modal visible if redirecting
     }
   };
 
-  // This effect will automatically animate progress bar smoothly
+  // Effect for smooth progress animation
   useEffect(() => {
     if (signing && progress < 100) {
       const interval = setInterval(() => {
         setProgress(prev => {
-          // Increment progress slightly for animation effect
-          const target = Math.min((currentStep + 1) * 20, 100); 
+          const target = Math.min((currentStep + 1) * 20, 100);
           if (prev < target - 2) {
             return prev + 0.5;
           }
@@ -160,11 +319,17 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
     }
   }, [signing, progress, currentStep]);
 
+  // Debug form errors
+  useEffect(() => {
+    console.log("Current form errors:", formErrors);
+  }, [formErrors]);
+
   return (
     <div className="hide-scrollbar w-full h-screen overflow-auto bg-gray-50 dark:bg-gray-900 p-4 flex justify-center items-center">
       <div className="hide-scrollbar w-full max-w-[700px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-y-auto max-h-full">
         <div className="p-6 sm:p-10">
-          <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
+          <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-[#00f0ff] neon-glow">
+          {/* <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white"> */}
             Create account
           </h1>
 
@@ -173,13 +338,17 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
               {/* First Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm mb-2 dark:text-white">
+                  <label className="block text-base mb-2 dark:text-white">
                     First Name <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
-                    {...register("firstName", { required: "First name is required" })}
-                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                    {...register("firstName", {
+                      required: "First name is required",
+                      onChange: (e) => handleInputChange(e, "firstName"),
+                      onBlur: () => handleBlur("firstName"),
+                    })}
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                     placeholder="First Name"
                   />
                   {formErrors.firstName && (
@@ -189,30 +358,31 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
                 {/* Last Name */}
                 <div>
-                  <label className="block text-sm mb-2 dark:text-white">
+                  <label className="block text-base mb-2 dark:text-white">
                     Last Name <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
                     {...register("lastName", { required: "Last name is required" })}
-                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                     placeholder="Last Name"
                   />
                   {formErrors.lastName && (
                     <p className="text-xs text-red-600 mt-2">{formErrors.lastName.message}</p>
                   )}
                 </div>
+
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm mb-2 dark:text-white">
+                  <label className="block text-base mb-2 dark:text-white">
                     Company Name <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
                     {...register("companyName", { required: "Company name is required" })}
-                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                     placeholder="Awesome Inc."
                   />
                   {formErrors.companyName && (
@@ -220,8 +390,9 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-sm mb-2 dark:text-white">
+
+                <div className="focus-within:border-[#774A67] focus-within:shadow-[0_0_15px_#774A67] transition duration-300 rounded-lg border p-1 dark:border-gray-700">
+                  <label className="block text-base mb-2 dark:text-white">
                     Company Logo <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -233,11 +404,11 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
               </div>
 
               <div>
-                <label className="block text-sm mb-2 dark:text-white">Master of Accounts</label>
+                <label className="block text-base mb-2 dark:text-white">Master of Accounts</label>
                 <input
                   type="text"
                   {...register("masterOfAccounts")}
-                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                   placeholder="Master of Accounts"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -247,17 +418,21 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
               {/* Site Name */}
               <div>
-                <label className="block text-sm mb-2 dark:text-white">
+                <label className="block text-base mb-2 dark:text-white">
                   Site Name <span className="text-red-400">*</span>
                 </label>
                 <div className="flex">
                   <input
                     type="text"
-                    {...register("siteName", { required: "Site name is required" })}
-                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                    {...register("siteName", {
+                      required: "Site name is required",
+                      onChange: (e) => handleInputChange(e, "siteName"),
+                      onBlur: () => handleBlur("siteName"),
+                    })}
+                    className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                     placeholder="example-site"
                   />
-                  <span className="ml-2 mt-3 text-gray-500 text-sm">.alphaxerp.com</span>
+                  <span className="ml-2 mt-3 text-gray-500 text-base">.alphaxerp.com</span>
                 </div>
                 {formErrors.siteName && (
                   <p className="text-xs text-red-600 mt-2">{formErrors.siteName.message}</p>
@@ -266,7 +441,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm mb-2 dark:text-white">
+                <label className="block text-base mb-2 dark:text-white">
                   Email <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -277,8 +452,10 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                       value: EMAIL_PATTERN,
                       message: "Email has invalid format",
                     },
+                    onChange: (e) => handleInputChange(e, "email"),
+                    onBlur: () => handleBlur("email"),
                   })}
-                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                   placeholder="your@email.com"
                 />
                 {formErrors.email && (
@@ -288,7 +465,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
               {/* Password */}
               <div>
-                <label className="block text-sm mb-2 dark:text-white">
+                <label className="block text-base mb-2 dark:text-white">
                   Password <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -313,7 +490,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                       return true;
                     },
                   })}
-                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                  className="py-3 px-4 block w-full border rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                   placeholder="Enter a secure password"
                 />
                 {formErrors.password && (
@@ -322,12 +499,12 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
               </div>
 
               <div>
-                <label className="block text-sm mb-2 dark:text-white">
+                <label className="block text-base mb-2 dark:text-white">
                   Phone Number <span className="text-red-400">*</span>
                 </label>
                 <PhoneInput
                   country={"sa"}
-                  inputClass="!w-full !py-3 !pl-14 !px-4 !text-sm !border !rounded-lg !dark:bg-slate-900 !dark:border-gray-700 !dark:text-gray-400"
+                  inputClass="!w-full !py-3 !pl-14 !px-4 !text-sm !border !rounded-lg dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 placeholder:text-gray-400 focus:outline-none focus:border-[#774A67] focus:shadow-[0_0_15px_#774A67] transition duration-300"
                   specialLabel={""}
                   value={""}
                   onChange={(value) => {
@@ -343,7 +520,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
               <button
                 type="submit"
                 disabled={signing}
-                className="w-full mt-4 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-[#774A67] text-white hover:bg-[#613a55] disabled:opacity-50"
+                className="w-full mt-4 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg bg-[#774A67] text-white hover:bg-[#613a55] focus:outline-none focus:ring-2 focus:ring-[#774A67] focus:shadow-[0_0_15px_#774A67] hover:shadow-[0_0_15px_#774A67] transition duration-300 disabled:opacity-50"
               >
                 {signing ? "Creating site..." : "Create Account"}
               </button>
@@ -360,7 +537,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
               <div className="relative w-24 h-24">
                 {/* Background circle */}
                 <div className="absolute inset-0 rounded-full border-4 border-gray-700"></div>
-                
+
                 {/* Progress circle with gradient */}
                 <svg className="absolute inset-0 w-24 h-24 -rotate-90">
                   <circle
@@ -384,7 +561,7 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                     strokeDasharray={`${2 * Math.PI * 38}`}
                     strokeDashoffset={`${2 * Math.PI * 38 * (1 - progress / 100)}`}
                   />
-                  
+
                   {/* Define gradient */}
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -393,47 +570,45 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                     </linearGradient>
                   </defs>
                 </svg>
-                
+
                 {/* Percentage text */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <span className="text-xl font-bold text-white">{Math.round(progress)}%</span>
                 </div>
               </div>
             </div>
-            
+
             {/* Stepper title */}
             <h2 className="text-xl font-bold text-center text-white mb-2">
               {signupSteps[currentStep]?.title || "Processing..."}
             </h2>
-            
+
             {/* Description */}
             <p className="text-gray-300 text-center mb-6">
               {signupSteps[currentStep]?.description || "Please wait..."}
             </p>
-            
+
             {/* Stepper indicators */}
             <div className="flex justify-between items-center mb-4 px-2">
               {signupSteps.map((step, index) => (
                 <div key={index} className="flex flex-col items-center">
                   {/* Step connector line */}
                   {index > 0 && (
-                    <div 
-                      className={`h-0.5 w-full absolute -ml-full ${
-                        index <= currentStep ? "bg-gradient-to-r from-purple-500 to-blue-500" : "bg-gray-700"
-                      }`}
+                    <div
+                      className={`h-0.5 w-full absolute -ml-full ${index <= currentStep ? "bg-gradient-to-r from-purple-500 to-blue-500" : "bg-gray-700"
+                        }`}
                       style={{ width: "100%", marginLeft: "-50%", marginTop: "10px", zIndex: 0 }}
                     ></div>
                   )}
-                  
+
                   {/* Step bubble */}
-                  <div 
-                    className={`z-10 flex items-center justify-center w-7 h-7 rounded-full transition-all duration-500 ${
-                      index < currentStep 
-                        ? "bg-gradient-to-r from-purple-500 to-blue-500" 
-                        : index === currentStep 
-                        ? "bg-gradient-to-r from-purple-400 to-blue-400 border-2 border-white animate-pulse" 
-                        : "bg-gray-700"
-                    }`}
+                  <div
+                    className={`z-10 flex items-center justify-center w-7 h-7 rounded-full transition-all duration-500 ${index < currentStep
+                        ? "bg-gradient-to-r from-purple-500 to-blue-500"
+                        : index === currentStep
+                          ? "bg-gradient-to-r from-purple-400 to-blue-400 border-2 border-white animate-pulse"
+                          : "bg-gray-700"
+                      }`}
                   >
                     {index < currentStep ? (
                       // Completed step check mark
@@ -445,40 +620,36 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                       <span className="text-xs text-white font-medium">{index + 1}</span>
                     )}
                   </div>
-                  
+
                   {/* Step label (visible on wider screens) */}
                   <div className="hidden sm:block text-xs mt-2 text-center whitespace-nowrap">
-                    <span 
-                      className={`${
-                        index <= currentStep ? "text-gray-200" : "text-gray-500"
-                      } font-medium`}
+                    <span
+                      className={`${index <= currentStep ? "text-gray-200" : "text-gray-500"
+                        } font-medium`}
                     >
-                      {step.title.split(' ')[0]}
+                      {step.title.split(" ")[0]}
                     </span>
                   </div>
                 </div>
               ))}
             </div>
-            
+
             {/* Detailed status message */}
-            <div className="text-center text-gray-400 text-sm mt-6 italic">
-              {stepMessage}
-            </div>
-            
+            <div className="text-center text-gray-400 text-sm mt-6 italic">{stepMessage}</div>
+
             {/* Animated gear icons */}
             <div className="flex justify-center gap-4 mt-8 opacity-70">
               {[24, 20, 16].map((size, i) => (
                 <svg
                   key={i}
-                  className={`w-${size} h-${size} ${
-                    i % 2 === 0 ? "animate-spin-slow" : "animate-spin-slow-reverse"
-                  }`}
+                  className={`w-${size} h-${size} ${i % 2 === 0 ? "animate-spin-slow" : "animate-spin-slow-reverse"
+                    }`}
                   style={{
                     animationDuration: `${(i + 3) * 2}s`,
-                    opacity: 0.6 + (i * 0.1)
+                    opacity: 0.6 + i * 0.1,
                   }}
                   xmlns="http://www.w3.org/2000/svg"
-                  fill={i === 0 ? "#8B5CF6" : i === 1 ? "#3B82F6" : "#EC4899"}
+                  fill={i === 0 ? "#8B5CF6" : i == 1 ? "#3B82F6" : "#EC4899"}
                   viewBox="0 0 24 24"
                 >
                   <path d="M19.14 12.936a7.996 7.996 0 0 0 .047-.936 7.996 7.996 0 0 0-.047-.936l2.036-1.593a.5.5 0 0 0 .121-.63l-1.926-3.33a.5.5 0 0 0-.607-.218l-2.396.96a7.98 7.98 0 0 0-1.617-.936l-.36-2.52A.5.5 0 0 0 13.405 2h-2.81a.5.5 0 0 0-.492.415l-.36 2.52a7.98 7.98 0 0 0-1.617.936l-2.396-.96a.5.5 0 0 0-.607.218L2.197 8.46a.5.5 0 0 0 .121.63l2.036 1.593a7.996 7.996 0 0 0 0 1.872L2.318 14.15a.5.5 0 0 0-.121.63l1.926 3.33a.5.5 0 0 0 .607.218l2.396-.96a7.98 7.98 0 0 0 1.617.936l.36 2.52a.5.5 0 0 0 .492.415h2.81a.5.5 0 0 0 .492-.415l.36-2.52a7.98 7.98 0 0 0 1.617-.936l2.396.96a.5.5 0 0 0 .607-.218l1.926-3.33a.5.5 0 0 0-.121-.63l-2.036-1.593zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" />
@@ -493,10 +664,6 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 };
 
 export default SignUpForm;
-
-
-
-
 
 
 // second code comment

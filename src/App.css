@@ -5,6 +5,7 @@
 .with-base-gradient {
   @apply bg-gradient-to-tl from-blue-600 to-violet-600;
 }
+
 .left-shadow {
   width: 100%;
   height: 100%;
@@ -17,4 +18,44 @@
     height: 100%;
     box-shadow: -10px 0 15px 5px #f6f6f600;
   }
+}
+
+@layer utilities {
+  .neon-glow {
+    text-shadow:
+      0 0 5px #774A67,
+      0 0 10px #774A67,
+      0 0 20px #774A67,
+      0 0 40px #774A67,
+      0 0 80px #774A67;
+  }
+}
+
+@layer utilities {
+  .neon-border-glow {
+    box-shadow:
+      0 0 5px #774A67,
+      0 0 10px #774A67,
+      0 0 20px #774A67,
+      0 0 40px #774A67,
+      0 0 80px #774A67;
+  }
+
+  .animate-border-glow {
+    animation: border-glow 3s ease-in-out infinite;
+  }
+
+  /* @keyframes border-glow {
+    0% {
+      box-shadow: 0 0 10px #774A67;
+    }
+
+    50% {
+      box-shadow: 0 0 25px #774A67;
+    }
+
+    100% {
+      box-shadow: 0 0 10px #774A67;
+    }
+  } */
 }
