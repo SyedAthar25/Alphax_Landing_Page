@@ -9,9 +9,9 @@ const Hero = () => {
     <section className="wrapper relative overflow-hidden">
       {/* Background Image */}
       <img
-        src="/images/Colorful_bg.png"
+        src="src/images/gradient2.jpg"
         alt="Colorful Background"
-        className="absolute top-0 left-0 w-full h-full object-cover z-0 opacity-90 pointer-events-none"
+        className="absolute top-0 left-0 w-full h-full object-cover z-20 opacity-90 pointer-events-none"
       />
 
       {/* Optional Blur + Brightness Overlay */}

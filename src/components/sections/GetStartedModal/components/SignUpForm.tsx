@@ -326,10 +326,9 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
 
   return (
     <div className="hide-scrollbar w-full h-screen overflow-auto bg-gray-50 dark:bg-gray-900 p-4 flex justify-center items-center">
-      <div className="hide-scrollbar w-full max-w-[700px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-y-auto max-h-full">
+      <div className="hide-scrollbar w-full max-w-[700px] bg-gradient-to-br from-[#ffffff] to-[#c7a8bd] border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-y-auto max-h-full"> {/* Added gradient background here */}
         <div className="p-6 sm:p-10">
           <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-[#00f0ff] neon-glow">
-          {/* <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white"> */}
             Create account
           </h1>
 
@@ -371,7 +370,6 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                     <p className="text-xs text-red-600 mt-2">{formErrors.lastName.message}</p>
                   )}
                 </div>
-
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -389,7 +387,6 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                     <p className="text-xs text-red-600 mt-2">{formErrors.companyName.message}</p>
                   )}
                 </div>
-
 
                 <div className="focus-within:border-[#774A67] focus-within:shadow-[0_0_15px_#774A67] transition duration-300 rounded-lg border p-1 dark:border-gray-700">
                   <label className="block text-base mb-2 dark:text-white">
@@ -604,10 +601,10 @@ const SignUpForm = ({ toggleSignUp }: Props) => {
                   {/* Step bubble */}
                   <div
                     className={`z-10 flex items-center justify-center w-7 h-7 rounded-full transition-all duration-500 ${index < currentStep
-                        ? "bg-gradient-to-r from-purple-500 to-blue-500"
-                        : index === currentStep
-                          ? "bg-gradient-to-r from-purple-400 to-blue-400 border-2 border-white animate-pulse"
-                          : "bg-gray-700"
+                      ? "bg-gradient-to-r from-purple-500 to-blue-500"
+                      : index === currentStep
+                        ? "bg-gradient-to-r from-purple-400 to-blue-400 border-2 border-white animate-pulse"
+                        : "bg-gray-700"
                       }`}
                   >
                     {index < currentStep ? (

@@ -164,7 +164,7 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
         {plans.map((plan, index) => (
           <div
             key={index}
-            className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-shadow bg-white dark:bg-gray-900 transform hover:scale-105 transition-transform'
+            className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-shadow bg-gradient-to-br from-[#ffffff] to-[#c7a8bd] dark:bg-gray-900 transform hover:scale-105 transition-transform'
           >
             <h4 className='font-semibold text-3xl text-gray-800 dark:text-gray-200'>
               {plan.title}
@@ -212,10 +212,16 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
           </div>
         </div>
       )}
+    </div>
+  );
+};
 
-      {/*  */}
-      {/* Test */}
-      {/* <div
+export default Pricing;
+
+
+{/*  */ }
+{/* Test */ }
+{/* <div
       className='max-w-[90rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto max-h-[620px] lg:max-h-max overflow-y-auto no-scrollbar'
       id='pricing'
     >
@@ -255,8 +261,9 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
         ))}
       </div>
     </div> */}
-      {/* test end */}
-      {/* <div className={cn('mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:items-center', { "md:grid-cols-1": isExpiredPlan })}>
+
+{/* test end */ }
+{/* <div className={cn('mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 lg:items-center', { "md:grid-cols-1": isExpiredPlan })}>
         {!isExpiredPlan && (
           <div className='flex flex-col border border-gray-200 text-center rounded-xl p-8 dark:border-gray-700'>
             <h4 className='font-medium text-lg text-gray-800 dark:text-gray-200'>
@@ -391,8 +398,3 @@ const Pricing = ({ isInModal, isExpiredPlan }: Props) => {
           </a>
         </div>
       </div> */}
-    </div>
-  );
-};
-
-export default Pricing;

@@ -141,8 +141,9 @@ const SignInForm = ({ toggleSignUp, loginSuccess, setLoginSuccess }: Props) => {
   return (
     <div
       className={cn(
-        "w-full mx-4 my-4 lg:mx-0 lg:mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700 md:max-w-[450px] ",
-        loginSuccess && "md:max-w-max"
+        "w-full mx-4 my-4 lg:mx-0 lg:mt-7 border border-gray-200 rounded-xl shadow-sm dark:border-gray-700 md:max-w-[450px] ",
+        loginSuccess && "md:max-w-max",
+        "bg-gradient-to-br from-[#ffffff] to-[#c7a8bd]" // Added gradient background here
       )}
     >
       {!loginSuccess && (
